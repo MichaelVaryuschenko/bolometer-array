@@ -1,0 +1,78 @@
+#include "log.h"
+#include "usbd_cdc_if.h"
+
+static const log_entry_lvl_t log_lvl = LOG_ENTRY_LVL_DBG; // Messages with level below this threshold will not be logged
+static log_entry_t log[LOG_LEN];
+static log_state_t log_state = LOG_STATE_IDLE;
+static uint8_t entries_to_read = 0;
+static uint8_t curr_entry = 0; // Index of entry being read at the moment
+
+static void log_add_prefix(uint8_t* entry_body, char* entry_prefix) { // entry_prefix is supposed to be of length PREF_LEN
+  for(int i = 0; i < PREF_LEN; i++) {
+    entry_body[i] = entry_prefix[i];
+  }
+}
+
+// Returns 0 for successful operation; returns 1 if log is inaccessible at the moment
+uint8_t log_add_entry(log_entry_lvl_t level, char* body, uint8_t len) {
+  if(log_state != LOG_STATE_IDLE) {
+    return 1;
+  }
+  else {
+    log_state = LOG_STATE_WRITING;
+    if(!level < log_lvl) {
+      for (uint8_t i = LOG_LEN - 1; i > 0; i--) {
+        log[i] = log[i - 1];
+      }
+      log[0].level = level;
+      log[0].len = len + PREF_LEN;
+      switch (level) {
+      case LOG_ENTRY_LVL_DBG:
+        log_add_prefix(log[0].body, "DBG: ");
+        break;
+      case LOG_ENTRY_LVL_ERR:
+        log_add_prefix(log[0].body, "ERR: ");
+        break;
+      case LOG_ENTRY_LVL_DAT:
+        log_add_prefix(log[0].body, "DAT: ");
+        break;
+      }
+      for(int i = 0; i < len; i++) {
+        log[0].body[i] = body[i + 3];
+      }
+    }
+    log_state = LOG_STATE_IDLE;
+    return 0;
+  }
+}
+
+// Returns 0 for successful operation; returns 1 if log is inaccessible at the moment
+uint8_t log_send_entries(uint8_t n) {
+  if(log_state != LOG_STATE_IDLE) {
+    return 1;
+  }
+  else {
+    log_state = LOG_STATE_READING;
+    entries_to_read = n;
+    curr_entry = 0;
+    CDC_Transmit_FS(log[curr_entry].body, log[curr_entry].len);
+    return 0;
+  }
+}
+
+uint8_t log_send_next_entry() {
+  if(log_state != LOG_STATE_READING) { // If transmission is not supposed to happen at all at the moment
+    // TO-DO: raise flag for logging an error entry in main.c
+    return 1;
+  }
+  else {
+    curr_entry++;
+    if(curr_entry < entries_to_read) {
+      return CDC_Transmit_FS(log[curr_entry].body, log[curr_entry].len);
+    }
+    else {
+      log_state = LOG_STATE_IDLE;
+      return 0;
+    }
+  }
+}
