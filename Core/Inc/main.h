@@ -63,6 +63,8 @@ void Error_Handler(void);
 #define PIN_A9_GPIO_Port GPIOC
 #define PIN_A10_Pin GPIO_PIN_15
 #define PIN_A10_GPIO_Port GPIOC
+#define PIN_NSS_Pin GPIO_PIN_12
+#define PIN_NSS_GPIO_Port GPIOB
 #define PIN_A1_Pin GPIO_PIN_6
 #define PIN_A1_GPIO_Port GPIOC
 #define PIN_A2_Pin GPIO_PIN_7
