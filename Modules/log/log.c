@@ -4,7 +4,6 @@
 static const log_entry_lvl_t log_lvl = LOG_ENTRY_LVL_DBG; // Messages with level below this threshold will not be logged
 static log_entry_t log[LOG_LEN];
 static log_state_t log_state = LOG_STATE_IDLE;
-static uint8_t entries_to_read = 0;
 static uint8_t curr_entry = 0; // Index of entry being read at the moment
 
 static void log_add_prefix(uint8_t* entry_body, char* entry_prefix) { // entry_prefix is supposed to be of length PREF_LEN
@@ -21,9 +20,11 @@ uint8_t log_add_entry(log_entry_lvl_t level, char* body, uint8_t len) {
   else {
     log_state = LOG_STATE_WRITING;
     if(!level < log_lvl) {
+      log_entry_t temp = log[LOG_LEN - 1];
       for (uint8_t i = LOG_LEN - 1; i > 0; i--) {
         log[i] = log[i - 1];
       }
+      log[0] = temp;
       log[0].level = level;
       log[0].len = len + PREF_LEN;
       switch (level) {
@@ -53,8 +54,7 @@ uint8_t log_send_entries(uint8_t n) {
   }
   else {
     log_state = LOG_STATE_READING;
-    entries_to_read = n;
-    curr_entry = 0;
+    curr_entry = n - 1;
     CDC_Transmit_FS(log[curr_entry].body, log[curr_entry].len);
     return 0;
   }
@@ -66,8 +66,8 @@ uint8_t log_send_next_entry() {
     return 1;
   }
   else {
-    curr_entry++;
-    if(curr_entry < entries_to_read) {
+    if(curr_entry > 0) {
+      curr_entry--;
       return CDC_Transmit_FS(log[curr_entry].body, log[curr_entry].len);
     }
     else {
