@@ -5,6 +5,7 @@ static const log_entry_lvl_t log_lvl = LOG_ENTRY_LVL_DBG; // Messages with level
 static log_entry_t log[LOG_LEN];
 static log_state_t log_state = LOG_STATE_IDLE;
 static uint8_t curr_entry = 0; // Index of entry being read at the moment
+static uint8_t num_of_entries = 0;
 
 static void log_add_prefix(uint8_t* entry_body, char* entry_prefix) { // entry_prefix is supposed to be of length PREF_LEN
   for(int i = 0; i < PREF_LEN; i++) {
@@ -41,6 +42,7 @@ uint8_t log_add_entry(log_entry_lvl_t level, char* body, uint8_t len) {
       for(int i = 0; i < len; i++) {
         log[0].body[i] = body[i + 3];
       }
+      num_of_entries++;
     }
     log_state = LOG_STATE_IDLE;
     return 0;
@@ -75,4 +77,19 @@ uint8_t log_send_next_entry() {
       return 0;
     }
   }
+}
+
+uint8_t log_send_all_entries(void) {
+  uint8_t retval = log_send_entries(num_of_entries);
+  num_of_entries = 0;
+  return retval;
+}
+
+uint8_t log_device_info(void) {
+  // TO-DO: implement!
+  uint8_t retval = 0;
+  retval += log_add_entry(LOG_ENTRY_LVL_DAT, "Bolometric matrix, firmware v1.0.0 (IN DEV)\n", 44);
+  retval += log_add_entry(LOG_ENTRY_LVL_DAT, "Source repo: https://github.com/MichaelVaryuschenko/bolometer-array\n", 68);
+  retval += log_send_all_entries();
+  return retval;
 }

@@ -57,28 +57,28 @@ void Error_Handler(void);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
-#define PIN_A8_Pin GPIO_PIN_13
-#define PIN_A8_GPIO_Port GPIOC
-#define PIN_A9_Pin GPIO_PIN_14
-#define PIN_A9_GPIO_Port GPIOC
-#define PIN_A10_Pin GPIO_PIN_15
-#define PIN_A10_GPIO_Port GPIOC
-#define PIN_NSS_Pin GPIO_PIN_12
-#define PIN_NSS_GPIO_Port GPIOB
-#define PIN_A1_Pin GPIO_PIN_6
-#define PIN_A1_GPIO_Port GPIOC
-#define PIN_A2_Pin GPIO_PIN_7
-#define PIN_A2_GPIO_Port GPIOC
-#define PIN_A3_Pin GPIO_PIN_8
-#define PIN_A3_GPIO_Port GPIOC
-#define PIN_A4_Pin GPIO_PIN_9
-#define PIN_A4_GPIO_Port GPIOC
-#define PIN_A5_Pin GPIO_PIN_10
-#define PIN_A5_GPIO_Port GPIOC
-#define PIN_A6_Pin GPIO_PIN_11
-#define PIN_A6_GPIO_Port GPIOC
-#define PIN_A7_Pin GPIO_PIN_12
-#define PIN_A7_GPIO_Port GPIOC
+#define A8_Pin GPIO_PIN_13
+#define A8_GPIO_Port GPIOC
+#define A9_Pin GPIO_PIN_14
+#define A9_GPIO_Port GPIOC
+#define A10_Pin GPIO_PIN_15
+#define A10_GPIO_Port GPIOC
+#define NSS_Pin GPIO_PIN_12
+#define NSS_GPIO_Port GPIOB
+#define A1_Pin GPIO_PIN_6
+#define A1_GPIO_Port GPIOC
+#define A2_Pin GPIO_PIN_7
+#define A2_GPIO_Port GPIOC
+#define A3_Pin GPIO_PIN_8
+#define A3_GPIO_Port GPIOC
+#define A4_Pin GPIO_PIN_9
+#define A4_GPIO_Port GPIOC
+#define A5_Pin GPIO_PIN_10
+#define A5_GPIO_Port GPIOC
+#define A6_Pin GPIO_PIN_11
+#define A6_GPIO_Port GPIOC
+#define A7_Pin GPIO_PIN_12
+#define A7_GPIO_Port GPIOC
 
 /* USER CODE BEGIN Private defines */
 

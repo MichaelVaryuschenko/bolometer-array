@@ -111,7 +111,7 @@ extern USBD_HandleTypeDef hUsbDeviceFS;
 
 /* USER CODE BEGIN EXPORTED_VARIABLES */
 extern volatile uint16_t flags_rt; // From main.c
-extern const uint16_t FLAG_RT_USB_TRANSMIT; // From main.c
+extern const uint16_t FLAG_RT_LOG_ENTRY_TRANSMIT_CPLT; // From main.c
 /* USER CODE END EXPORTED_VARIABLES */
 
 /**
@@ -313,7 +313,7 @@ static int8_t CDC_TransmitCplt_FS(uint8_t *Buf, uint32_t *Len, uint8_t epnum)
   UNUSED(Buf);
   UNUSED(Len);
   UNUSED(epnum);
-  flags_rt |= FLAG_RT_USB_TRANSMIT;
+  flags_rt |= FLAG_RT_LOG_ENTRY_TRANSMIT_CPLT;
   /* USER CODE END 13 */
   return result;
 }
