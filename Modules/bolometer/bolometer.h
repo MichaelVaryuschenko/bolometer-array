@@ -10,7 +10,7 @@ typedef enum {
   BOLOM_STATE_DATA_PROCESSING
 } bolom_state_t;
 
-void bolometer_init(uint8_t* context_data_raw);
+void bolometer_init();
 void bolometer_handle(void);
 void bolometer_adc_cnv_handle(void); // Size of buf must be 2048
 void bolometer_adc_acq_handle(void);

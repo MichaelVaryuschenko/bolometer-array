@@ -18,7 +18,7 @@ extern SPI_HandleTypeDef hspi2;
 static bolom_state_t bolom_state = BOLOM_STATE_IDLE;
 static uint8_t x_curr; // Not supposed to be changed outside of sensor_select_x
 static uint8_t y_curr; // Not supposed to be changed outside of sensor_select_y
-static uint8_t* data_raw; // Context; array to store data from ADC of 2049 elements; 1 extra element is needed due to SPI shenanigans (look into ADC CONV handler for details)
+static uint8_t data_raw[2049]; // Array to store data from ADC; 1 extra element is needed due to SPI shenanigans (look into ADC CONV handler for details)
 
 static void compress_data(char* res_array, uint16_t shift) {
   uint8_t* data_raw_shifted = &data_raw[shift];
@@ -106,11 +106,9 @@ static void sensor_select_y(uint8_t y) {
   y_curr = y;
 }
 
-void bolometer_init(uint8_t* context_data_raw) {
+void bolometer_init(void) {
   sensor_select_x(0);
   sensor_select_y(0);
-  
-  data_raw = context_data_raw;
   
   bolom_state = BOLOM_STATE_ADC_CAL; // Purely for code architecture purposes
   HAL_GPIO_WritePin(NSS_GPIO_Port, NSS_Pin, GPIO_PIN_RESET);

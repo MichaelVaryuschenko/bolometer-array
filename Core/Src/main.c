@@ -70,7 +70,12 @@ void SystemClock_Config(void);
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
 void device_init(void) {
-  // TO-DO: init bolometer, delay, print device info, start TIM1
+  bolometer_init();
+  
+  log_device_info();
+  
+  HAL_TIM_Base_Start_IT(&htim1);
+  HAL_TIM_OC_Start_IT(&htim1, TIM_CHANNEL_1);
 }
 /* USER CODE END 0 */
 
